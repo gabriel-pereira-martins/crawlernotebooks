@@ -19,12 +19,11 @@ export class NotebooksService {
       const response = await axios.request(options);
       const $ = cheerio.load(response.data);
 
-
       const lastPageNumber = parseInt($('.pagination li').not('.disabled').last().prev().text(), 10);
       return lastPageNumber;
     } catch (error) {
       console.error('Erro ao carregar a página para encontrar o número da última página:', error);
-      throw new Error('Erro ao carregar o número da última página');
+      throw new Error('Erro ao carregar o número da última página.');
     }
   }
 
@@ -85,6 +84,10 @@ export class NotebooksService {
       filteredNotebooks = filteredNotebooks.sort((a, b) => parseFloat(a.price.replace(/[^\d.-]/g, '')) - parseFloat(b.price.replace(/[^\d.-]/g, '')));
     } else if (filterDto.Order === 'DESC') {
       filteredNotebooks = filteredNotebooks.sort((a, b) => parseFloat(b.price.replace(/[^\d.-]/g, '')) - parseFloat(a.price.replace(/[^\d.-]/g, '')));
+    }
+
+    if (filteredNotebooks.length === 0) {
+      return { message: 'Nenhum notebook encontrado para a marca indicada.' };
     }
 
     return filteredNotebooks;
